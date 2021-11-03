@@ -28,7 +28,7 @@ function App() {
 
     return (
         <div className="App">
-            {(typeof weatherData.main != 'undefined' || weatherData.cod != 400) ?
+            {(typeof weatherData.main != 'undefined' || weatherData.cod === 200) ?
                 (<Weather weatherData = {weatherData}/>) :
                 (<div></div>)
             }
