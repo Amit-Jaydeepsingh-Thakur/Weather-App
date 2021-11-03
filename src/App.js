@@ -14,12 +14,14 @@ function App() {
                 setLatitude(position.coords.latitude);
                 setLongitude(position.coords.longitude);
             });
-        
-            await fetch(`${process.env.REACT_APP_API_URL}/weather/?lat=${latitude}&lon=${longitude}&units=metric&APPID=${process.env.REACT_APP_API_KEY}`)
+            
+            if (process.env.REACT_APP_API_KEY) {
+                await fetch(`${process.env.REACT_APP_API_URL}/weather/?lat=${latitude}&lon=${longitude}&units=metric&APPID=${process.env.REACT_APP_API_KEY}`)
                 .then(res => res.json())
                 .then(result => {
                     setWeatherData(result);
                 });
+            }
         }
 
         fetchWeatherData();
