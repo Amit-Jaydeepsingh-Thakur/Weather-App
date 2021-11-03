@@ -1,25 +1,39 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import Weather from './components/weather';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [latitude, setLatitude] = useState([]);
+    const [longitude, setLongitude] = useState([]);
+    const [weatherData, setWeatherData] = useState([]);
+
+    useEffect(() => {
+        const fetchWeatherData = async () => {
+
+            navigator.geolocation.getCurrentPosition(function(position) {
+                setLatitude(position.coords.latitude);
+                setLongitude(position.coords.longitude);
+            });
+            
+            await fetch(`${process.env.REACT_APP_API_URL}/weather/?lat=${latitude}&lon=${longitude}&units=metric&APPID=${process.env.REACT_APP_API_KEY}`)
+                .then(res => res.json())
+                .then(result => {
+                    setWeatherData(result);
+                    console.log(result);
+                });
+        }
+
+        fetchWeatherData();
+    }, [latitude, longitude]);
+
+    return (
+        <div className="App">
+            {(typeof weatherData.main != 'undefined' || weatherData.cod != 400) ?
+                (<Weather weatherData = {weatherData}/>) :
+                (<div></div>)
+            }
+        </div>
+    );
 }
 
 export default App;
